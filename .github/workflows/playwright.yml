@@ -33,3 +33,44 @@ jobs:
           name: playwright-report-gui
           path: playwright-report/
           retention-days: 30
+
+  api:
+    name: API tests
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: lts/*
+
+      - name: Install test dependencies
+        run: npm ci
+
+      - name: Checkout todo-be backend
+        uses: actions/checkout@v5
+        with:
+          repository: morosystems/todo-be
+          path: todo-be
+
+      - name: Install todo-be dependencies
+        working-directory: todo-be
+        run: npm install
+
+      - name: Start todo-be in background
+        working-directory: todo-be
+        run: npm start &
+
+      - name: Wait for todo-be to be ready
+        run: npx wait-on http://localhost:8080/v3/api-docs --timeout 60000
+
+      - name: Run API tests
+        run: npx playwright test --project=api
+
+      - uses: actions/upload-artifact@v5
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report-api
+          path: playwright-report/
+          retention-days: 30
