@@ -1,0 +1,27 @@
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+# Visual test baselines
+# - Windows baselines (-win32.png) committed from local development
+# - Linux baselines (-linux.png) committed from CI
+# - Other platforms (macOS) generate locally via `updateSnapshots: 'missing'`
+tests/visual/**/*-snapshots/*
+!tests/visual/**/*-snapshots/*-win32.png
+!tests/visual/**/*-snapshots/*-linux.png
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Environment
+.env
+.env.local
